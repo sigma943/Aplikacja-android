@@ -1,9 +1,5 @@
 {
   "appId": "com.autoolx.monitor",
-  "appName": "AutoOlx Monitor",
-  "webDir": "dist",
-  "server": {
-    "url": "https://ais-dev-2r34i5ei7qr62mrnaweziz-194878385555.europe-west2.run.app",
-    "cleartext": true
-  }
+  "appName": "OLX Tracker Pro",
+  "webDir": "dist"
 }

@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "olx-tracker-pro",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -44,6 +44,7 @@
     "vite": "^6.2.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",

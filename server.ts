@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import fs from 'fs';
@@ -12,6 +13,7 @@ async function startServer() {
     const PORT = 3000;
 
     app.use(express.json());
+    app.use(cors());
 
     // Ensure data directories exist
     const dataDir = path.join(process.cwd(), 'data');
