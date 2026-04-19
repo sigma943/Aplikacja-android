@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand: var(--theme-primary, #F5A623);
+  --color-bg: var(--theme-bg, #0A0A0A);
+  --color-surface: var(--theme-surface, #111111);
+  --color-surface-hover: color-mix(in srgb, var(--color-surface), var(--color-text) 5%);
+  --color-border: var(--theme-border, #222222);
+  --color-text: var(--theme-text, #FFFFFF);
+  --color-text-muted: var(--theme-text-muted, #9CA3AF);
+  --glass-blur: 12px;
+
+  /* Overriding standard Tailwind colors to follow the theme */
+  --color-white: var(--color-text);
+  --color-gray-100: var(--color-text);
+  --color-gray-200: var(--color-text);
+  --color-gray-300: var(--color-text-muted);
+  --color-gray-400: var(--color-text-muted);
+  --color-gray-500: var(--color-text-muted);
+  --color-gray-600: var(--color-text-muted);
+  --color-gray-700: var(--color-text-muted);
+  --color-gray-800: var(--color-text-muted);
+  --color-gray-900: var(--color-text);
+  --color-zinc-400: var(--color-text-muted);
+  --color-zinc-500: var(--color-text-muted);
+  --color-slate-400: var(--color-text-muted);
+  --color-slate-500: var(--color-text-muted);
+  --color-neutral-400: var(--color-text-muted);
+  --color-neutral-500: var(--color-text-muted);
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-text antialiased transition-colors duration-300;
+  }
+  
+  /* Ensure root background is solid behind the blurred layers */
+  :root {
+    background-color: var(--color-bg);
+  }
+}
+
+@layer components {
+  .glass {
+    background-color: color-mix(in srgb, var(--color-surface), transparent 20%);
+    backdrop-filter: blur(var(--glass-blur));
+    @apply border border-border;
+  }
+  
+  .btn-primary {
+    @apply bg-brand hover:bg-brand/90 text-black font-bold px-4 py-3 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  
+  .btn-secondary {
+    @apply bg-surface hover:bg-surface-hover text-text border border-border px-4 py-3 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  
+  .input-field {
+    @apply bg-surface border border-border rounded-xl px-4 py-2 text-text focus:outline-none focus:border-brand transition-colors placeholder:text-text-muted/50;
+  }
+  
+  .card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  /* Support glassmorphism if enabled on root - More dramatic effect */
+  [data-glass="true"] .card,
+  [data-glass="true"] .glass-enabled {
+    background-color: color-mix(in srgb, var(--color-surface), transparent 45%) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border: 1px solid color-mix(in srgb, var(--color-text), transparent 90%) !important;
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-text), transparent 96%) !important;
+  }
+
+  /* Enhance background when glass is on to make blur visible - Vibrant animated gradient */
+  [data-glass="true"] body {
+    background: var(--color-bg);
+    background-image: 
+      radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--color-brand), transparent 80%) 0, transparent 40%),
+      radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--color-brand), transparent 80%) 0, transparent 40%),
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, #3B82F6, transparent 85%) 0, transparent 40%),
+      radial-gradient(circle at 0% 100%, color-mix(in srgb, #8B5CF6, transparent 85%) 0, transparent 40%);
+    background-attachment: fixed;
+  }
+
+  /* Add a pulse animation for the glass background glow */
+  [data-glass="true"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color-brand), transparent 92%), transparent 70%);
+    animation: glassPulse 8s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  @keyframes glassPulse {
+    from { opacity: 0.3; transform: scale(0.8); }
+    to { opacity: 0.7; transform: scale(1.2); }
+  }
+
+  /* Recharts overrides to prevent ugly highlights on mobile Safari/Chrome */
+  .recharts-wrapper,
+  .recharts-surface,
+  .recharts-wrapper * {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* Temporary states during PDF generation mapping */
+  .pdf-export-mode .recharts-surface {
+    transform: translateZ(0); /* Force Hardware Acceleration so HTML-to-image caches SVGs properly */
+    transition: none !important;
+  }
+  .pdf-export-mode * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

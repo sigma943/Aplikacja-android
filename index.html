@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#f5a623" />
+    <title>OLX Tracker Pro</title>
+    <script>
+      (function() {
+        try {
+          const cacheStr = localStorage.getItem('olx_tracker_theme');
+          const root = document.documentElement;
+          
+          if (!cacheStr) {
+            // Default to dark if no cache yet to avoid blinding flash if they were on dark
+            root.classList.add('dark');
+            root.style.backgroundColor = '#0A0A0A';
+            return;
+          }
+          
+          const cache = JSON.parse(cacheStr);
+          const isSystem = cache.mode === 'system';
+          const isDarkPreferred = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const effectiveIsDark = isSystem ? isDarkPreferred : cache.mode === 'dark';
+
+          root.classList.add(effectiveIsDark ? 'dark' : 'light');
+          root.style.colorScheme = effectiveIsDark ? 'dark' : 'light';
+
+          const apply = (name, val) => val && root.style.setProperty(name, val);
+          
+          let bg = cache.bg;
+          if (isSystem) {
+            if (isDarkPreferred) {
+              bg = '#0F172A';
+              apply('--theme-surface', '#1E293B');
+              apply('--theme-border', '#334155');
+              apply('--theme-text', '#FFFFFF');
+              apply('--theme-text-muted', '#9CA3AF');
+            } else {
+              bg = '#FFFFFF';
+              apply('--theme-surface', '#F9FAFB');
+              apply('--theme-border', '#E5E7EB');
+              apply('--theme-text', '#111827');
+              apply('--theme-text-muted', '#6B7280');
+            }
+          } else {
+            apply('--theme-surface', cache.surface);
+            apply('--theme-border', cache.border);
+            apply('--theme-text', cache.text);
+            apply('--theme-text-muted', cache.text_muted);
+          }
+          
+          apply('--theme-bg', bg);
+          apply('--theme-primary', cache.primary);
+          root.style.backgroundColor = bg;
+          
+          if (cache.glass === 'true') {
+            root.style.setProperty('--glass-blur', '12px');
+            root.setAttribute('data-glass', 'true');
+          }
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.backgroundColor = '#0A0A0A';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

@@ -1,0 +1,6 @@
+{
+  "appId": "com.autoolx.monitor",
+  "appName": "AutoOlx Monitor",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
